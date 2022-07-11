@@ -67,7 +67,7 @@ describe("PlatformKoaHandler", () => {
         expect(handler).not.toEqual(handlerMetadata.handler);
         expect(handler.length).toEqual(2);
 
-        await handler(ctx, next);
+        await $ctx.runInContext(() => handler(ctx, next));
 
         expect($ctx.getApp().emit).toBeCalledWith("error", error, ctx);
       });

@@ -66,6 +66,7 @@ export * from "./utils/createHandlerMetadata";
 export * from "./utils/createHttpServer";
 export * from "./utils/createHttpsServer";
 export * from "./utils/createInjector";
+export * from "./utils/ensureContext";
 export * from "./utils/getStaticsOptions";
 export * from "./utils/listenServer";
 export * from "./utils/mapReturnedResponse";

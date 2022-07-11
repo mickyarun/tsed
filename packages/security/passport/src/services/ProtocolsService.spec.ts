@@ -90,7 +90,7 @@ describe("ProtocolsService", () => {
     // WHEN
     const result = await protocolService.invoke(provider);
     const resultDone: any = await new Promise((resolve) => {
-      Strategy.mock.calls[0][1](ctx.getRequest(), "test", (...args: any[]) => resolve(args));
+      ctx.runInContext(() => Strategy.mock.calls[0][1](ctx.getRequest(), "test", (...args: any[]) => resolve(args)));
     });
 
     // THEN
@@ -110,7 +110,7 @@ describe("ProtocolsService", () => {
     // WHEN
     const result = await protocolService.invoke(provider);
     const resultDone: any = await new Promise((resolve) => {
-      Strategy.mock.calls[0][1](ctx.getRequest(), "test", (...args: any[]) => resolve(args));
+      ctx.runInContext(() => Strategy.mock.calls[0][1](ctx.getRequest(), "test", (...args: any[]) => resolve(args)));
     });
 
     // THEN

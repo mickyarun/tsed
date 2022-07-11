@@ -1,11 +1,11 @@
-import {PlatformContext, PlatformHandler} from "@tsed/common";
+import {ensureContext, PlatformContext, PlatformHandler} from "@tsed/common";
 import {ancestorsOf} from "@tsed/core";
 import {Injectable, InjectorService, Provider} from "@tsed/di";
 import {Unauthorized} from "@tsed/exceptions";
 import Passport, {Strategy} from "passport";
-import {PassportException} from "../errors/PassportException";
-import {PROVIDER_TYPE_PROTOCOL} from "../contants/constants";
 import {promisify} from "util";
+import {PROVIDER_TYPE_PROTOCOL} from "../contants/constants";
+import {PassportException} from "../errors/PassportException";
 import type {ProtocolMethods} from "../interfaces/ProtocolMethods";
 import type {ProtocolOptions} from "../interfaces/ProtocolOptions";
 
@@ -138,21 +138,29 @@ export class ProtocolsService {
     const platformHandler = this.injector.get<PlatformHandler>(PlatformHandler)!;
     const middleware = platformHandler.createCustomHandler(provider, "$onVerify");
 
-    return async (req: any, ...args: any[]) => {
+    return (req: any, ...args: any[]) => {
       const done = args[args.length - 1];
 
-      if (req.$ctx) {
-        req.$ctx.set("PROTOCOL_ARGS", args.slice(0, -1));
+      return ensureContext(
+        req,
+        async ($ctx) => {
+          if (!$ctx.isDone()) {
+            $ctx.set("PROTOCOL_ARGS", args.slice(0, -1));
 
-        try {
-          await middleware(req.$ctx);
-          done(null, ...[].concat(req.$ctx.data));
-        } catch (err) {
-          done(err, false, {message: err.message});
+            try {
+              await middleware($ctx);
+              done(null, ...[].concat(req.$ctx.data));
+            } catch (err) {
+              done(err, false, {message: err.message});
+            }
+          } else {
+            done(new Error("Headers already sent"), false, {message: "Headers already sent"});
+          }
+        },
+        () => {
+          done(new Error("Headers already sent"), false, {message: "Headers already sent"});
         }
-      } else {
-        done(new Error("Headers already sent"), false, {message: "Headers already sent"});
-      }
+      );
     };
   }
 }

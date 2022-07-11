@@ -110,16 +110,17 @@ describe("PlatformParams", () => {
       // GIVEN
       const {param, h, platformParams} = await buildPlatformParams({
         paramType: ParamTypes.ERR,
-        dataPath: "err"
+        dataPath: "$ctx.error"
       });
-      h.err = new Error();
+
+      const error = (h.$ctx.error = new Error());
 
       // WHEN
       const pipes = await platformParams.getPipes(param);
       const value = await platformParams.getArg(h, pipes, param);
 
       // THEN
-      expect(value).to.deep.eq(h.err);
+      expect(value).to.deep.eq(error);
     });
     it("should return $CTX", async () => {
       // GIVEN
@@ -263,7 +264,8 @@ describe("PlatformParams", () => {
         paramType: ParamTypes.LOCALS,
         dataPath: "$ctx.response.locals"
       });
-      h.err = new Error();
+
+      h.$ctx.error = new Error();
 
       // WHEN
       const pipes = await platformParams.getPipes(param);

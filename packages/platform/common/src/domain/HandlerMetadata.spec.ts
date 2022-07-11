@@ -19,6 +19,10 @@ describe("HandlerMetadata", () => {
       expect(handlerMetadata.hasNextFunction).toEqual(false);
       expect(handlerMetadata.hasErrorParam).toEqual(false);
       expect(handlerMetadata.toString()).toEqual("");
+      expect(handlerMetadata.isEndpoint()).toEqual(false);
+      expect(handlerMetadata.isErrorMiddleware()).toEqual(false);
+      expect(handlerMetadata.isRawMiddleware()).toEqual(false);
+      expect(handlerMetadata.isFinal()).toEqual(false);
     });
   });
   describe("from function", () => {
@@ -36,6 +40,10 @@ describe("HandlerMetadata", () => {
       expect(handlerMetadata.hasNextFunction).toEqual(true);
       expect(handlerMetadata.hasErrorParam).toEqual(false);
       expect(handlerMetadata.toString()).toEqual("");
+      expect(handlerMetadata.isEndpoint()).toEqual(false);
+      expect(handlerMetadata.isErrorMiddleware()).toEqual(false);
+      expect(handlerMetadata.isRawMiddleware()).toEqual(true);
+      expect(handlerMetadata.isFinal()).toEqual(false);
     });
   });
   describe("from function err", () => {
@@ -54,6 +62,10 @@ describe("HandlerMetadata", () => {
       expect(handlerMetadata.hasErrorParam).toEqual(true);
       expect(handlerMetadata.propertyKey).toBeUndefined();
       expect(handlerMetadata.toString()).toEqual("");
+      expect(handlerMetadata.isEndpoint()).toEqual(false);
+      expect(handlerMetadata.isErrorMiddleware()).toEqual(false);
+      expect(handlerMetadata.isRawMiddleware()).toEqual(true);
+      expect(handlerMetadata.isFinal()).toEqual(false);
     });
   });
   describe("from function without nextFn", () => {
@@ -73,6 +85,10 @@ describe("HandlerMetadata", () => {
       expect(handlerMetadata.hasErrorParam).toEqual(false);
       expect(handlerMetadata.propertyKey).toBeUndefined();
       expect(handlerMetadata.toString()).toEqual("");
+      expect(handlerMetadata.isEndpoint()).toEqual(false);
+      expect(handlerMetadata.isErrorMiddleware()).toEqual(false);
+      expect(handlerMetadata.isRawMiddleware()).toEqual(true);
+      expect(handlerMetadata.isFinal()).toEqual(false);
     });
   });
   describe("from endpoint/middleware without injection", () => {
@@ -99,6 +115,10 @@ describe("HandlerMetadata", () => {
       expect(handlerMetadata.hasErrorParam).toEqual(false);
       expect(handlerMetadata.propertyKey).toEqual("test");
       expect(handlerMetadata.toString()).toEqual("Test.test");
+      expect(handlerMetadata.isEndpoint()).toEqual(true);
+      expect(handlerMetadata.isErrorMiddleware()).toEqual(false);
+      expect(handlerMetadata.isRawMiddleware()).toEqual(false);
+      expect(handlerMetadata.isFinal()).toEqual(false);
     });
   });
   describe("from endpoint/middleware with injection", () => {
@@ -125,6 +145,10 @@ describe("HandlerMetadata", () => {
       expect(handlerMetadata.hasErrorParam).toEqual(false);
       expect(handlerMetadata.propertyKey).toEqual("test");
       expect(handlerMetadata.toString()).toEqual("Test.test");
+      expect(handlerMetadata.isEndpoint()).toEqual(true);
+      expect(handlerMetadata.isErrorMiddleware()).toEqual(false);
+      expect(handlerMetadata.isRawMiddleware()).toEqual(false);
+      expect(handlerMetadata.isFinal()).toEqual(false);
 
       expect(handlerMetadata.getParams()[0].paramType).toEqual("REQUEST");
       expect(handlerMetadata.getParams()[1].paramType).toEqual("NEXT_FN");
@@ -153,6 +177,10 @@ describe("HandlerMetadata", () => {
       expect(handlerMetadata.hasErrorParam).toEqual(true);
       expect(handlerMetadata.propertyKey).toEqual("use");
       expect(handlerMetadata.toString()).toEqual("Test.use");
+      expect(handlerMetadata.isEndpoint()).toEqual(false);
+      expect(handlerMetadata.isErrorMiddleware()).toEqual(false);
+      expect(handlerMetadata.isRawMiddleware()).toEqual(true);
+      expect(handlerMetadata.isFinal()).toEqual(false);
     });
   });
   describe("from middleware with injection and error", () => {
@@ -178,6 +206,10 @@ describe("HandlerMetadata", () => {
       expect(handlerMetadata.hasErrorParam).toEqual(true);
       expect(handlerMetadata.propertyKey).toEqual("use");
       expect(handlerMetadata.toString()).toEqual("Test.use");
+      expect(handlerMetadata.isEndpoint()).toEqual(false);
+      expect(handlerMetadata.isErrorMiddleware()).toEqual(true);
+      expect(handlerMetadata.isRawMiddleware()).toEqual(false);
+      expect(handlerMetadata.isFinal()).toEqual(false);
     });
   });
 });

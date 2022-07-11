@@ -74,13 +74,15 @@ describe("AlterActions", () => {
     const instance = new actions.custom(info as any, ctx.getRequest(), ctx.getResponse());
 
     new Promise((resolve) => {
-      instance.resolve(
-        "handler",
-        "method",
-        ctx.getRequest(),
-        ctx.getResponse(),
-        (err: any, result: any) => resolve(result),
-        "setActionItemMessage" as any
+      ctx.runInContext(() =>
+        instance.resolve(
+          "handler",
+          "method",
+          ctx.getRequest(),
+          ctx.getResponse(),
+          (err: any, result: any) => resolve(result),
+          "setActionItemMessage" as any
+        )
       );
     });
 
@@ -154,13 +156,15 @@ describe("AlterActions", () => {
     const instance = new actions.custom(info as any, ctx.getRequest(), ctx.getResponse());
 
     new Promise((resolve) => {
-      instance.resolve(
-        "handler",
-        "method",
-        ctx.getRequest(),
-        ctx.getResponse(),
-        (err: any, result: any) => resolve(result),
-        "setActionItemMessage" as any
+      ctx.runInContext(() =>
+        instance.resolve(
+          "handler",
+          "method",
+          ctx.getRequest(),
+          ctx.getResponse(),
+          (err: any, result: any) => resolve(result),
+          "setActionItemMessage" as any
+        )
       );
     });
 
@@ -224,13 +228,15 @@ describe("AlterActions", () => {
     const instance = new actions.custom(info as any, ctx.getRequest(), ctx.getResponse());
 
     const result = await new Promise((resolve) => {
-      instance.resolve(
-        "handler",
-        "method",
-        ctx.getRequest(),
-        ctx.getResponse(),
-        (err: any, result: any) => resolve(result),
-        "setActionItemMessage" as any
+      ctx.runInContext(() =>
+        instance.resolve(
+          "handler",
+          "method",
+          ctx.getRequest(),
+          ctx.getResponse(),
+          (err: any, result: any) => resolve(result),
+          "setActionItemMessage" as any
+        )
       );
     });
     expect(result).toEqual(undefined);
@@ -343,13 +349,15 @@ describe("AlterActions", () => {
     const instance = new actions.custom(info as any, ctx.getRequest(), ctx.getResponse());
 
     new Promise((resolve) => {
-      instance.resolve(
-        "handler",
-        "method",
-        ctx.getRequest(),
-        ctx.getResponse(),
-        (err: any, result: any) => resolve(result),
-        "setActionItemMessage" as any
+      ctx.runInContext(() =>
+        instance.resolve(
+          "handler",
+          "method",
+          ctx.getRequest(),
+          ctx.getResponse(),
+          (err: any, result: any) => resolve(result),
+          "setActionItemMessage" as any
+        )
       );
     });
 

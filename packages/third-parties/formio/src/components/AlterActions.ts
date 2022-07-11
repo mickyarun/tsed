@@ -1,10 +1,10 @@
-import {Inject, InjectorService, Provider, runInContext} from "@tsed/di";
-import {EndpointMetadata} from "@tsed/schema";
+import {AnyToPromiseWithCtx, ArgScope, getContext, PlatformContext, PlatformHandler} from "@tsed/common";
+import {AnyToPromiseStatus, catchAsyncError} from "@tsed/core";
+import {Inject, InjectorService, Provider} from "@tsed/di";
 import {FormioActionInfo} from "@tsed/formio-types";
 import {PlatformParams} from "@tsed/platform-params";
 import {PlatformResponseFilter} from "@tsed/platform-response-filter";
-import {AnyToPromise, AnyToPromiseStatus} from "@tsed/core";
-import {PlatformContext, setResponseHeaders} from "@tsed/common";
+import {EndpointMetadata} from "@tsed/schema";
 import {Alter} from "../decorators/alter";
 import {AlterHook} from "../domain/AlterHook";
 import {SetActionItemMessage} from "../domain/FormioAction";
@@ -21,6 +21,9 @@ export class AlterActions implements AlterHook {
 
   @Inject()
   protected params: PlatformParams;
+
+  @Inject()
+  protected handlers: PlatformHandler;
 
   @Inject()
   protected responseFilter: PlatformResponseFilter;
@@ -79,51 +82,38 @@ export class AlterActions implements AlterHook {
       next: any,
       setActionItemMessage: SetActionItemMessage
     ) => {
-      const $ctx = req.$ctx;
-      $ctx.set("ACTION_CTX", {handler, method, setActionItemMessage, action});
-      $ctx.endpoint = EndpointMetadata.get(provider.useClass, "resolve");
+      const $ctx = getContext<PlatformContext>()!;
 
-      await runInContext($ctx, async () => {
-        try {
-          const resolver = new AnyToPromise();
-          const handler = await promisedHandler;
-          const {state, data, status, headers} = await resolver.call(() => handler({$ctx}));
-          if (state === AnyToPromiseStatus.RESOLVED) {
-            if (status) {
-              $ctx.response.status(status);
-            }
+      const error = await catchAsyncError(async () => {
+        $ctx.set("ACTION_CTX", {handler, method, setActionItemMessage, action});
+        $ctx.endpoint = EndpointMetadata.get(provider.useClass, "resolve");
 
-            if (headers) {
-              $ctx.response.setHeaders(headers);
-            }
-
-            if (data !== undefined) {
-              $ctx.data = data;
-
-              return await this.flush($ctx.data, $ctx);
-            }
-
-            next();
-          }
-        } catch (er) {
-          next(er);
-        }
+        return this.onRequest(await promisedHandler, $ctx);
       });
+
+      return (error || $ctx.data === undefined) && next(error);
     };
   }
 
-  private async flush(data: any, $ctx: PlatformContext) {
-    const {response} = $ctx;
+  private async onRequest(handler: (scope: ArgScope) => any, $ctx: PlatformContext) {
+    const resolver = new AnyToPromiseWithCtx($ctx);
 
-    if (!response.isDone()) {
-      setResponseHeaders($ctx);
+    const {state, data, status, headers} = await resolver.call(handler);
 
-      data = await this.responseFilter.serialize(data, $ctx);
-      data = await this.responseFilter.transform(data, $ctx);
+    if (state === AnyToPromiseStatus.RESOLVED) {
+      if (status) {
+        $ctx.response.status(status);
+      }
 
-      response.body(data);
+      if (headers) {
+        $ctx.response.setHeaders(headers);
+      }
+
+      if (data !== undefined) {
+        $ctx.data = data;
+        this.handlers.setResponseHeaders($ctx);
+        return this.handlers.flush($ctx);
+      }
     }
-
-    return response;
   }
 }

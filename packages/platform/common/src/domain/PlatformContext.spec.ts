@@ -69,4 +69,28 @@ describe("PlatformContext", () => {
     // @ts-ignore
     expect(context.logger.logger.info).toBeCalled();
   });
+  it("should return done when the response is empty", async () => {
+    // @ts-ignore
+    const context = new PlatformContext({
+      id: "id",
+      event: {
+        response: PlatformTest.createResponse(),
+        request: PlatformTest.createRequest({
+          url: "/"
+        })
+      },
+      logger: {
+        info: jest.fn()
+      },
+      injector: PlatformTest.injector,
+      maxStackSize: 0,
+      ignoreUrlPatterns: ["/admin"]
+    });
+
+    expect(context.isDone()).toEqual(false);
+
+    await context.destroy();
+
+    expect(context.isDone()).toEqual(true);
+  });
 });

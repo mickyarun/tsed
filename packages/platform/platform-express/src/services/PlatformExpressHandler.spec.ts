@@ -138,7 +138,7 @@ describe("PlatformExpressHandler", () => {
 
         const next = jest.fn();
 
-        await handler($ctx.getRequest(), $ctx.getResponse(), next);
+        await $ctx.runInContext(() => handler($ctx.getRequest(), $ctx.getResponse(), next));
 
         expect(next).toBeCalledWith(error);
       });

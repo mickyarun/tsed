@@ -64,6 +64,9 @@ import {DIConfiguration} from "./DIConfiguration";
 export class InjectorService extends Container {
   public settings: DIConfiguration = new DIConfiguration();
   public logger: DILogger = console;
+  /**
+   * @deprecated
+   */
   public runInContext = runInContext;
   private resolvedConfiguration: boolean = false;
   #cache = new LocalsContainer();

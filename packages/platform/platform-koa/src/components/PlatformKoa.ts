@@ -121,20 +121,20 @@ export class PlatformKoa implements PlatformAdapter<Koa, KoaRouter> {
   }
 
   useContext(): this {
-    const app = this.injector.get<PlatformApplication<Koa>>(PlatformApplication)!;
     const {logger} = this.injector;
     logger.info("Mount app context");
 
     const invoke = createContext(this.injector);
+    const app = this.injector.get<PlatformApplication<Koa>>(PlatformApplication)!;
 
     app.getApp().use(async (ctx: Context, next: Next) => {
-      await invoke({
+      const $ctx = await invoke({
         request: ctx.request as any,
         response: ctx.response as any,
         ctx
       });
 
-      return next();
+      return $ctx.runInContext(next);
     });
 
     return this;

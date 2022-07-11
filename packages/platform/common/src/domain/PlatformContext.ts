@@ -4,6 +4,7 @@ import {IncomingMessage, ServerResponse} from "http";
 import {PlatformApplication} from "../services/PlatformApplication";
 import {PlatformRequest} from "../services/PlatformRequest";
 import {PlatformResponse} from "../services/PlatformResponse";
+import {HandlerMetadata} from "./HandlerMetadata";
 
 declare global {
   namespace TsED {
@@ -26,9 +27,17 @@ export class PlatformContext extends DIContext implements ContextMethods {
    */
   public endpoint: EndpointMetadata;
   /**
+   *
+   */
+  public handlerMetadata: HandlerMetadata;
+  /**
    * The data return by the previous endpoint if you use multiple handler on the same route. By default data is empty.
    */
   public data: any;
+  /**
+   * The error caught by the current handler
+   */
+  public error?: unknown;
   /**
    * The current @@PlatformResponse@@.
    */
@@ -39,6 +48,8 @@ export class PlatformContext extends DIContext implements ContextMethods {
   readonly request: PlatformRequest;
 
   private ignoreUrlPatterns: RegExp[] = [];
+
+  #isDestroyed: boolean = false;
 
   constructor({
     event,
@@ -95,18 +106,14 @@ export class PlatformContext extends DIContext implements ContextMethods {
 
     // @ts-ignore
     delete this.endpoint;
+    // @ts-ignore
+    delete this.handlerMetadata;
+
+    this.#isDestroyed = true;
   }
 
   isDone() {
-    if (!this.request || !this.response) {
-      return true;
-    }
-
-    if (this.request?.isAborted()) {
-      return true;
-    }
-
-    return this.response?.isDone();
+    return this.request?.isAborted() || this.response?.isDone() || this.#isDestroyed;
   }
 
   /**

@@ -10,5 +10,6 @@ declare global {
 /**
  * @platform
  * @express
+ * @deprecated
  */
 export class PlatformExpressResponse extends PlatformResponse<Express.Response> {}

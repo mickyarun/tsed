@@ -73,6 +73,18 @@ export class HandlerMetadata {
     return this.routeOptions?.isFinal || false;
   }
 
+  isRawMiddleware() {
+    return [HandlerType.RAW_ERR_FN, HandlerType.RAW_FN].includes(this.type);
+  }
+
+  isErrorMiddleware() {
+    return this.type === HandlerType.ERR_MIDDLEWARE;
+  }
+
+  isEndpoint() {
+    return this.type === HandlerType.ENDPOINT;
+  }
+
   toString() {
     return [this.target && nameOf(this.target), this.propertyKey].filter(Boolean).join(".");
   }

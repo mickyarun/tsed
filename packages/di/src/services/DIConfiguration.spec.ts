@@ -1,6 +1,15 @@
 import {DIConfiguration} from "../../src";
 
 describe("DIConfiguration", () => {
+  describe("version()", () => {
+    it("should get version", () => {
+      // GIVEN
+      const configuration = new DIConfiguration();
+
+      configuration.version = "1.0.0";
+      expect(configuration.version).toEqual("1.0.0");
+    });
+  });
   describe("scopes()", () => {
     it("should get scopes", () => {
       // GIVEN
@@ -8,6 +17,15 @@ describe("DIConfiguration", () => {
 
       configuration.scopes = {};
       expect(configuration.scopes).toEqual({});
+    });
+  });
+  describe("routes()", () => {
+    it("should get routes", () => {
+      // GIVEN
+      const configuration = new DIConfiguration();
+
+      configuration.routes = [];
+      expect(configuration.routes).toEqual([]);
     });
   });
 
@@ -59,6 +77,23 @@ describe("DIConfiguration", () => {
         const configuration = new DIConfiguration();
         configuration.set("rootDir", "/root");
         expect(configuration.resolve("${rootDir}")).toEqual("/root");
+      });
+    });
+  });
+  describe("forEach()", () => {
+    it("should return all items", () => {
+      // GIVEN
+      const configuration = new DIConfiguration();
+      const map: any = {};
+      configuration.forEach((value, key) => {
+        map[key] = value;
+      });
+      expect(map).toEqual({
+        imports: [],
+        logger: {},
+        resolvers: [],
+        routes: [],
+        scopes: {}
       });
     });
   });
