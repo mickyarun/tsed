@@ -1,4 +1,4 @@
-import {AnyToPromiseStatus, catchAsyncError, isFunction, isStream} from "@tsed/core";
+import {AnyToPromiseResponseTypes, AnyToPromiseStatus, catchAsyncError, isFunction, isStream} from "@tsed/core";
 import {Inject, Injectable, Provider, ProviderScope} from "@tsed/di";
 import {$log} from "@tsed/logger";
 import {PlatformParams, PlatformParamsCallback} from "@tsed/platform-params";
@@ -65,7 +65,7 @@ export class PlatformHandler {
   async flush($ctx: PlatformContext) {
     const {response} = $ctx;
 
-    if (!response.isDone()) {
+    if (!$ctx.isDone()) {
       let data = await this.responseFilter.serialize($ctx.data, $ctx);
       data = await this.responseFilter.transform(data, $ctx);
       response.body(data);
@@ -114,7 +114,7 @@ export class PlatformHandler {
 
       const resolver = new AnyToPromiseWithCtx($ctx);
 
-      const {state, data, status, headers} = await resolver.call(handler);
+      const {state, type, data, status, headers} = await resolver.call(handler);
 
       // Note: restore previous handler metadata (for OIDC)
       $ctx.handlerMetadata = handlerMetadata;
@@ -132,8 +132,23 @@ export class PlatformHandler {
           $ctx.data = data;
         }
 
-        // Can be canceled by the handler itself
-        return await this.onSuccess($ctx);
+        if (!$ctx.isDone()) {
+          $ctx.error = null;
+
+          // set headers each times that an endpoint is called
+          if (handlerMetadata.isEndpoint()) {
+            this.setResponseHeaders($ctx);
+          }
+
+          // call returned middleware
+          if (isFunction($ctx.data) && !isStream($ctx.data)) {
+            return promisify($ctx.data)($ctx.getRequest(), $ctx.getResponse());
+          }
+
+          if (type === AnyToPromiseResponseTypes.STREAM) {
+            return this.flush($ctx);
+          }
+        }
       }
     } catch (error) {
       return this.onError(error, $ctx);
@@ -144,36 +159,5 @@ export class PlatformHandler {
     $ctx.error = error;
 
     throw error;
-  }
-
-  /**
-   * Manage success scenario
-   * @param $ctx
-   * @protected
-   */
-  protected async onSuccess($ctx: PlatformContext) {
-    // istanbul ignore next
-    if ($ctx.isDone()) {
-      return;
-    }
-
-    $ctx.error = null;
-
-    const metadata = $ctx.handlerMetadata;
-
-    // set headers each times that an endpoint is called
-
-    if (metadata.isEndpoint()) {
-      this.setResponseHeaders($ctx);
-    }
-
-    // call returned middleware
-    if (isFunction($ctx.data) && !isStream($ctx.data)) {
-      return promisify($ctx.data)($ctx.getRequest(), $ctx.getResponse());
-    }
-
-    if (metadata.isFinal()) {
-      return this.flush($ctx);
-    }
   }
 }

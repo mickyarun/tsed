@@ -7,7 +7,6 @@ import {SinglePathType} from "./SinglePathType";
 
 export interface PlatformLayerOptions extends Record<string, any> {
   token?: Type<any>;
-  isFinal?: boolean;
 }
 
 export interface PlatformLayerProps {

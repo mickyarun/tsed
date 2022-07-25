@@ -15,12 +15,12 @@ export class JsonOperationPathsMap extends Map<string, JsonMethodPath> {
 
   protected updateFinalRouteState(key: string) {
     if (this.has(key)) {
-      this.get(key)!.isFinal = false;
+      // this.get(key)!.isFinal = false;
     }
   }
 
   protected setFinalRoute(key: string, operationPath: JsonMethodPath) {
     this.set(key, operationPath);
-    operationPath.isFinal = true;
+    //  operationPath.isFinal = true;
   }
 }

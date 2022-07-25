@@ -1,6 +1,7 @@
-import {Injectable, InjectorService, ProviderScope, TokenProvider} from "@tsed/di";
-import {PlatformHandlerMetadata, PlatformRouters} from "@tsed/platform-router";
-import {ControllerProvider} from "@tsed/di";
+import {ControllerProvider, Injectable, InjectorService, ProviderScope, TokenProvider} from "@tsed/di";
+import {PlatformHandlerMetadata, PlatformRouters, useContextHandler} from "@tsed/platform-router";
+import {JsonOperationRoute} from "@tsed/schema";
+import {PlatformContext} from "../domain/PlatformContext";
 import {Route, RouteController} from "../interfaces/Route";
 import {PlatformApplication} from "./PlatformApplication";
 import {PlatformHandler} from "./PlatformHandler";
@@ -27,7 +28,11 @@ export class Platform {
   ) {
     // configure the router module
     platformRouters.hooks
-      .on("alterEndpointHandlers", platformMiddlewaresChain.get.bind(platformMiddlewaresChain))
+      .on("alterEndpointHandlers", (allMiddlewares: any[], operationRoute: JsonOperationRoute) => {
+        allMiddlewares = platformMiddlewaresChain.get(allMiddlewares, operationRoute);
+
+        return [...allMiddlewares, useContextHandler(($ctx: PlatformContext) => this.platformHandler.flush($ctx))];
+      })
       .on("alterHandler", (handler: Function, handlerMetadata: PlatformHandlerMetadata) => {
         handler = handlerMetadata.isRawMiddleware() ? handler : this.platformHandler.createHandler(handler as any, handlerMetadata);
 

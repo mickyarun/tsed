@@ -152,9 +152,7 @@ describe("routers integration", () => {
         {
           handlers: ["h"],
           method: "get",
-          opts: {
-            isFinal: true
-          },
+          opts: {},
           path: "/hello"
         }
       ]);
@@ -170,9 +168,7 @@ describe("routers integration", () => {
         {
           handlers: ["h"],
           method: "post",
-          opts: {
-            isFinal: true
-          },
+          opts: {},
           path: "/hello"
         }
       ]);
@@ -188,9 +184,7 @@ describe("routers integration", () => {
         {
           handlers: ["h"],
           method: "put",
-          opts: {
-            isFinal: true
-          },
+          opts: {},
           path: "/hello"
         }
       ]);
@@ -206,9 +200,7 @@ describe("routers integration", () => {
         {
           handlers: ["h"],
           method: "patch",
-          opts: {
-            isFinal: true
-          },
+          opts: {},
           path: "/hello"
         }
       ]);
@@ -224,9 +216,7 @@ describe("routers integration", () => {
         {
           handlers: ["h"],
           method: "head",
-          opts: {
-            isFinal: true
-          },
+          opts: {},
           path: "/hello"
         }
       ]);
@@ -242,9 +232,7 @@ describe("routers integration", () => {
         {
           handlers: ["h"],
           method: "delete",
-          opts: {
-            isFinal: true
-          },
+          opts: {},
           path: "/hello"
         }
       ]);
@@ -260,9 +248,7 @@ describe("routers integration", () => {
         {
           handlers: ["h"],
           method: "options",
-          opts: {
-            isFinal: true
-          },
+          opts: {},
           path: "/hello"
         }
       ]);

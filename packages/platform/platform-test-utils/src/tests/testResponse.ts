@@ -1,4 +1,4 @@
-import {Context, Controller, Get, Next, PathParams, PlatformResponse, PlatformTest, Post, Res} from "@tsed/common";
+import {Context, Controller, Get, PathParams, PlatformResponse, PlatformTest, Post, Res} from "@tsed/common";
 import {CollectionOf, ContentType, Enum, ForwardGroups, Groups, Ignore, Name, Property, Required, Returns, Status} from "@tsed/schema";
 import axios from "axios";
 import {createReadStream} from "fs";
@@ -72,26 +72,8 @@ class TeamsModel {
 @Controller("/response")
 class TestResponseParamsCtrl {
   @Get("/scenario1/:id")
-  public testScenario1Assert(@PathParams("id") id: number, @Context() ctx: Context) {
-    ctx.set("test", "value");
-  }
-
-  @Get("/scenario1/:id")
-  public testScenario1Get(@PathParams("id") id: number, @Context() ctx: Context) {
-    return id + ctx.get("test");
-  }
-
-  @Get("/scenario2/:id")
-  public testScenario2Assert(@PathParams("id") id: number, @Next() next: Next, @Context() ctx: Context) {
-    setTimeout(() => {
-      ctx.set("test", "value");
-      next();
-    }, 100);
-  }
-
-  @Get("/scenario2/:id")
-  public testScenario2Get(@PathParams("id") id: number, @Context() ctx: Context) {
-    return id + ctx.get("test");
+  public testScenario1Get(@PathParams("id") id: number) {
+    return `hello-${id}`;
   }
 
   @Post("/scenario3/:id?")
@@ -261,22 +243,12 @@ export function testResponse(options: PlatformTestOptions) {
   });
   afterAll(PlatformTest.reset);
 
-  describe("Scenario1: when multiple endpoint for the same path (classic)", () => {
+  describe.only("Scenario1: return the id (classic)", () => {
     describe("GET /rest/response/scenario1/:id", () => {
       it("should return the id + test", async () => {
         const response = await request.get("/rest/response/scenario1/10").expect(200);
 
-        expect(response.text).toEqual("10value");
-      });
-    });
-  });
-
-  describe("Scenario2: when multiple endpoint for the same path (with next)", () => {
-    describe("GET /rest/response/scenario1/:id", () => {
-      it("should return the id + test", async () => {
-        const response = await request.get("/rest/response/scenario2/10").expect(200);
-
-        expect(response.text).toEqual("10value");
+        expect(response.text).toEqual("hello-10");
       });
     });
   });

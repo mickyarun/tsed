@@ -8,7 +8,7 @@ export interface PlatformRouteOptions {
   token?: Type<any>;
   path?: PathType | undefined;
   method?: string;
-  isFinal?: boolean;
+  //  isFinal?: boolean;
   handlers: any[];
 }
 

@@ -7,7 +7,6 @@ import {SinglePathType} from "./SinglePathType";
 
 export interface PlatformHandlerMetadataOpts extends Record<string, any> {
   token?: TokenProvider;
-  isFinal?: boolean;
 }
 
 export interface PlatformHandlerMetadataProps {
@@ -117,10 +116,6 @@ export class PlatformHandlerMetadata {
 
   public hasParamType(paramType: any): boolean {
     return this.getParams().findIndex((p) => p.paramType === paramType) > -1;
-  }
-
-  public isFinal() {
-    return this.opts?.isFinal || false;
   }
 
   public isRawMiddleware() {
