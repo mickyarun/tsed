@@ -14,7 +14,7 @@ import {PlatformMiddlewaresChain} from "./PlatformMiddlewaresChain";
  */
 @Injectable({
   scope: ProviderScope.SINGLETON,
-  imports: []
+  imports: [PlatformHandler]
 })
 export class Platform {
   #controllers: Map<string, RouteController> = new Map();
@@ -22,23 +22,8 @@ export class Platform {
   constructor(
     readonly injector: InjectorService,
     readonly platformApplication: PlatformApplication,
-    readonly platformRouters: PlatformRouters,
-    readonly platformHandler: PlatformHandler,
-    readonly platformMiddlewaresChain: PlatformMiddlewaresChain
+    readonly platformRouters: PlatformRouters
   ) {
-    // configure the router module
-    platformRouters.hooks
-      .on("alterEndpointHandlers", (allMiddlewares: any[], operationRoute: JsonOperationRoute) => {
-        allMiddlewares = platformMiddlewaresChain.get(allMiddlewares, operationRoute);
-
-        return [...allMiddlewares, useContextHandler(($ctx: PlatformContext) => this.platformHandler.flush($ctx))];
-      })
-      .on("alterHandler", (handler: Function, handlerMetadata: PlatformHandlerMetadata) => {
-        handler = handlerMetadata.isRawMiddleware() ? handler : this.platformHandler.createHandler(handler as any, handlerMetadata);
-
-        return platformApplication.adapter.mapHandler(handler, handlerMetadata);
-      });
-
     platformRouters.prebuild();
   }
 

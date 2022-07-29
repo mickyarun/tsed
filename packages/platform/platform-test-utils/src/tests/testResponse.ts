@@ -243,7 +243,7 @@ export function testResponse(options: PlatformTestOptions) {
   });
   afterAll(PlatformTest.reset);
 
-  describe.only("Scenario1: return the id (classic)", () => {
+  describe("Scenario1: return the id (classic)", () => {
     describe("GET /rest/response/scenario1/:id", () => {
       it("should return the id + test", async () => {
         const response = await request.get("/rest/response/scenario1/10").expect(200);
