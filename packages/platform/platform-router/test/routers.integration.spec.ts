@@ -264,9 +264,7 @@ describe("routers integration", () => {
         {
           handlers: ["h"],
           method: "all",
-          opts: {
-            isFinal: true
-          },
+          opts: {},
           path: "/hello"
         }
       ]);

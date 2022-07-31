@@ -181,9 +181,6 @@ export class PlatformBuilder<App = TsED.Application> {
     setLoggerConfiguration(this.injector);
 
     await this.loadInjector();
-
-    this.#adapter.useContext();
-
     await this.loadRoutes();
 
     return this;
@@ -271,6 +268,7 @@ export class PlatformBuilder<App = TsED.Application> {
   }
 
   protected async loadRoutes() {
+    this.#adapter.useContext();
     this.#adapter.beforeLoadRoutes && (await this.#adapter.beforeLoadRoutes());
 
     // istanbul ignore next

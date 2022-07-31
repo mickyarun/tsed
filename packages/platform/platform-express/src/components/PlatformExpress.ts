@@ -1,5 +1,6 @@
 import {
   bindContext,
+  createContext,
   getContext,
   InjectorService,
   PlatformAdapter,
@@ -104,7 +105,6 @@ export class PlatformExpress implements PlatformAdapter<Express.Application> {
     injector.settings.get("env") === Env.PROD && app.getApp().disable("x-powered-by");
 
     await this.configureViewsEngine();
-    this.useContext();
   }
 
   async afterLoadRoutes() {
@@ -165,14 +165,17 @@ export class PlatformExpress implements PlatformAdapter<Express.Application> {
   }
 
   useContext(): this {
+    const {logger} = this.injector;
+
+    logger.debug("Mount app context");
+
+    const invoke = createContext(this.injector);
     const app = this.getPlatformApplication();
 
     app.use(async (request: any, response: any, next: any) => {
-      const $ctx = getContext<PlatformContext>()!;
+      const $ctx = await invoke({request, response});
 
-      $ctx.upgrade({request, response});
-
-      return next();
+      return $ctx.runInContext(next);
     });
 
     return this;

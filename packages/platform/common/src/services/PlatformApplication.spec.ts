@@ -73,15 +73,7 @@ describe("PlatformApplication", () => {
 
   describe("callback()", () => {
     it("should return the callback", async () => {
-      const $ctx = {
-        runInContext: jest.fn().mockImplementation((cb) => {
-          cb();
-        })
-      };
-
       const {platformApp} = await getPlatformApp();
-
-      (createContext as any).mockReturnValue(() => Promise.resolve($ctx));
 
       // WHEN
       const callback = jest.fn();

@@ -1,5 +1,6 @@
 import KoaRouter, {RouterOptions as KoaRouterOptions} from "@koa/router";
 import {
+  createContext,
   getContext,
   InjectorService,
   PlatformAdapter,
@@ -117,8 +118,6 @@ export class PlatformKoa implements PlatformAdapter<Koa> {
   async beforeLoadRoutes() {
     const app = this.injector.get<PlatformApplication<Koa>>(PlatformApplication)!;
 
-    this.useContext();
-
     app.use(resourceNotFoundMiddleware);
   }
 
@@ -156,12 +155,19 @@ export class PlatformKoa implements PlatformAdapter<Koa> {
   }
 
   useContext(): this {
+    const {logger} = this.injector;
+
+    logger.info("Mount app context");
+
+    const invoke = createContext(this.injector);
     const app = this.getPlatformApplication();
 
     app.use(async (koaContext: Context, next: Next) => {
-      const $ctx = getContext<PlatformContext<PlatformKoaRequest, PlatformKoaResponse>>()!;
-
-      $ctx.upgrade({request: koaContext.request as any, response: koaContext.response as any, koaContext});
+      await invoke({
+        request: koaContext.request as any,
+        response: koaContext.response as any,
+        koaContext
+      });
 
       return next();
     });

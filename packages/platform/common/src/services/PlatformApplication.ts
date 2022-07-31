@@ -1,4 +1,4 @@
-import {Injectable, InjectorService, ProviderScope} from "@tsed/di";
+import {Injectable, InjectorService, ProviderScope, runInContext} from "@tsed/di";
 import {PlatformRouter} from "@tsed/platform-router";
 import {IncomingMessage, ServerResponse} from "http";
 import {PlatformMulterSettings} from "../config/interfaces/PlatformMulterSettings";
@@ -47,12 +47,11 @@ export class PlatformApplication<App = TsED.Application> extends PlatformRouter 
       return this.callback()(req, res);
     }
 
-    const invoke = createContext(this.injector);
-
-    return (req: IncomingMessage, res: ServerResponse) => {
-      const cb = this.rawCallback();
-
-      return invoke({request: req, response: res}).then(($ctx) => $ctx.runInContext(() => cb(req, res)));
-    };
+    return this.rawCallback();
+    // return (req: IncomingMessage, res: ServerResponse) => {
+    //   const cb = this.rawCallback();
+    //
+    //   return runInContext({} as any,() => cb(req, res));
+    // };
   }
 }

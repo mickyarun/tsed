@@ -4,7 +4,7 @@ exports[`routers integration getLayers() should declare router - appRouter 1`] =
 Array [
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.get",
     ],
@@ -20,7 +20,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.post",
     ],
@@ -36,7 +36,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.put",
     ],
@@ -52,7 +52,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.delete",
     ],
@@ -68,7 +68,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.head",
     ],
@@ -84,7 +84,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.option",
     ],
@@ -100,7 +100,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.patch",
     ],
@@ -116,7 +116,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "NestedController.get",
     ],
@@ -132,7 +132,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "NestedController.post",
     ],
@@ -148,7 +148,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "NestedController.put",
     ],
@@ -164,7 +164,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "NestedController.delete",
     ],
@@ -180,7 +180,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "NestedController.head",
     ],
@@ -196,7 +196,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "NestedController.option",
     ],
@@ -212,7 +212,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "NestedController.patch",
     ],
@@ -233,7 +233,7 @@ exports[`routers integration getLayers() should declare router 1`] = `
 Array [
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.get",
     ],
@@ -249,7 +249,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.post",
     ],
@@ -265,7 +265,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.put",
     ],
@@ -281,7 +281,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.delete",
     ],
@@ -297,7 +297,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.head",
     ],
@@ -313,7 +313,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.option",
     ],
@@ -329,7 +329,7 @@ Array [
   },
   Object {
     "handlers": Array [
-      "",
+      "endpoint",
       "useBefore",
       "MyController.patch",
     ],
